@@ -1,65 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- TextView para el mensaje de bienvenida -->
+    <TextView
+        android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:text="¡Bienvenido a la app de Pokémon!"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- TextView para el mensaje de bienvenida -->
-        <TextView
-            android:id="@+id/tvWelcome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="¡Bienvenido a la app de Pokémon!"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="16dp" />
+    <!-- EditText para ingresar el nombre del Pokémon -->
+    <EditText
+        android:id="@+id/etPokemonName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del Pokémon (minusculas)"
+        android:minHeight="48dp"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- EditText para ingresar el nombre del Pokémon -->
-        <EditText
-            android:id="@+id/etPokemonName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre del Pokémon (minusculas)"
-            android:minHeight="48dp" />
+    <!-- Botón para buscar -->
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar"
+        app:layout_constraintTop_toBottomOf="@id/etPokemonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Botón para buscar -->
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Buscar" />
+    <!-- ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/btnSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- ProgressBar agregado -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center"/>
+    <!-- ImageView para mostrar el sprite del Pokémon -->
+    <ImageView
+        android:id="@+id/ivPokemonSprite"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:contentDescription="Pokemon Sprite"
+        android:scaleType="fitCenter"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- ImageView para mostrar el sprite del Pokémon -->
-        <ImageView
-            android:id="@+id/ivPokemonSprite"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:contentDescription="Pokemon Sprite"
-            android:scaleType="fitCenter"
-            android:padding="8dp" />
+    <!-- TextView para mostrar los resultados -->
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:paddingTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/ivPokemonSprite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- TextView para mostrar los resultados -->
-        <TextView
-            android:id="@+id/tvResult"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:paddingTop="16dp" />
-    </LinearLayout>
+    <!-- Botón superior izquierdo -->
+    <Button
+        android:id="@+id/btnEficaz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eficaz"
+        app:layout_constraintTop_toBottomOf="@id/tvResult"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnDebil"
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <!-- Botón superior derecho -->
+    <Button
+        android:id="@+id/btnDebil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Débil"
+        app:layout_constraintTop_toBottomOf="@id/tvResult"
+        app:layout_constraintStart_toEndOf="@+id/btnEficaz"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <!-- Botón central (Combate Pokémon) -->
+    <Button
+        android:id="@+id/btnCombate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Combate Pokémon"
+        app:layout_constraintTop_toBottomOf="@id/btnDebil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Botón inferior izquierdo (Añadir a Favoritos) -->
+    <Button
+        android:id="@+id/btnAddFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Añadir a Favoritos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Botón inferior derecho (Mostrar Favoritos) -->
+    <Button
+        android:id="@+id/btnShowFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mostrar Favoritos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

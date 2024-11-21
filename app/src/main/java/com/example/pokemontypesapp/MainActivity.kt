@@ -1,5 +1,6 @@
 package com.example.pokemontypesapp
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
@@ -29,6 +30,13 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         tvWelcome = findViewById(R.id.tvWelcome) // Asigna la referencia
 
+        // Botones
+        val btnEficaz = findViewById<Button>(R.id.btnEficaz)
+        val btnDebil = findViewById<Button>(R.id.btnDebil)
+        val btnAddFavorites = findViewById<Button>(R.id.btnAddFavorites)
+        val btnShowFavorites = findViewById<Button>(R.id.btnShowFavorites)
+        val btnCombate = findViewById<Button>(R.id.btnCombate)
+
         // Obtener datos de SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val username = sharedPreferences.getString("username", "Usuario") // Valor por defecto "Usuario"
@@ -48,6 +56,27 @@ class MainActivity : AppCompatActivity() {
             } else {
                 tvResult.text = "Por favor ingresa un nombre de Pokémon."
             }
+        }
+
+        // Listeners para cambiar a las actividades
+        btnEficaz.setOnClickListener {
+            startActivity(Intent(this, EficazActivity::class.java))
+        }
+
+        btnDebil.setOnClickListener {
+            startActivity(Intent(this, DebilActivity::class.java))
+        }
+
+        btnAddFavorites.setOnClickListener {
+            startActivity(Intent(this, AddFavoritesActivity::class.java))
+        }
+
+        btnShowFavorites.setOnClickListener {
+            startActivity(Intent(this, ShowFavoritesActivity::class.java))
+        }
+
+        btnCombate.setOnClickListener {
+            startActivity(Intent(this, CombateActivity::class.java))
         }
     }
 

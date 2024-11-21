@@ -33,6 +33,14 @@
             <!-- Aquí puedes agregar configuraciones adicionales si es necesario -->
         </activity>
 
+        <!-- Actividades de los botones-->
+        <activity android:name=".EficazActivity" />
+        <activity android:name=".DebilActivity" />
+        <activity android:name=".AddFavoritesActivity" />
+        <activity android:name=".ShowFavoritesActivity" />
+        <activity android:name=".CombateActivity" />
+
+
     </application>
 
 </manifest>
