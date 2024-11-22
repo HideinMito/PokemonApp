@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.pokemontypesapp"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.pokemontypesapp"
@@ -53,7 +53,10 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
 
     // Dependencia para RecyclerView (para la lista de tipos)
+    implementation(libs.androidx.recyclerview)
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
 
     // Dependencia para ConstraintLayout
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

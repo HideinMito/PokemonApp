@@ -1,5 +1,9 @@
 package com.example.pokemontypesapp
 
+data class PokemonType(
+    val name: String
+)
+
 data class PokemonResponse(
     val id: Int,
     val name: String,
@@ -12,9 +16,9 @@ data class Sprites(
 )
 
 data class TypeSlot(
-    val slot: Int,
-    val type: TypeInfo
+    val type: Type
 )
+
 
 data class TypeInfo(
     val name: String,

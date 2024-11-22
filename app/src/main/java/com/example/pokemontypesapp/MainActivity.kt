@@ -1,7 +1,6 @@
 package com.example.pokemontypesapp
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -17,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ivPokemonSprite: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var tvWelcome: TextView // Nuevo para mostrar el saludo
+    private var pokemonType: String = "" // Variable para almacenar el tipo del Pokémon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +37,6 @@ class MainActivity : AppCompatActivity() {
         val btnShowFavorites = findViewById<Button>(R.id.btnShowFavorites)
         val btnCombate = findViewById<Button>(R.id.btnCombate)
 
-        // Obtener datos de SharedPreferences
-        val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val username = sharedPreferences.getString("username", "Usuario") // Valor por defecto "Usuario"
-        val birthdate = sharedPreferences.getString("birthdate", "Fecha no registrada") // Valor por defecto
-
-        // Mostrar el saludo
-        tvWelcome.text = "Bienvenido, $username"
-
         // Iniciar la API
         api = PokeApiService.instance.create(PokeApi::class.java)
 
@@ -60,12 +52,17 @@ class MainActivity : AppCompatActivity() {
 
         // Listeners para cambiar a las actividades
         btnEficaz.setOnClickListener {
-            startActivity(Intent(this, EficazActivity::class.java))
+            val intent = Intent(this, EficazActivity::class.java)
+            intent.putExtra("pokemonTypes", pokemonType) // Pasar todos los tipos del Pokémon
+            startActivity(intent)
         }
 
         btnDebil.setOnClickListener {
-            startActivity(Intent(this, DebilActivity::class.java))
+            val intent = Intent(this, DebilActivity::class.java)
+            intent.putExtra("pokemonTypes", pokemonType) // Pasar todos los tipos del Pokémon
+            startActivity(intent)
         }
+
 
         btnAddFavorites.setOnClickListener {
             startActivity(Intent(this, AddFavoritesActivity::class.java))
@@ -89,15 +86,18 @@ class MainActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     val pokemon = response.body()
-                    val typeNames = pokemon?.types?.joinToString { it.type.name } ?: "Unknown"
+                    val types = pokemon?.types?.map { it.type.name } ?: listOf()
                     val spriteUrl = pokemon?.sprites?.front_default
 
                     Glide.with(this@MainActivity)
                         .load(spriteUrl)
                         .into(ivPokemonSprite)
 
-                    tvResult.text = "Tipo(s): $typeNames"
-                    fetchTypeWeakness(pokemon?.types, tvResult)
+                    tvResult.text = "Tipo(s): ${types.joinToString(", ")}"
+                    fetchPokemonTypes(pokemon?.types, tvResult)
+
+                    // Guardar los tipos del Pokémon
+                    pokemonType = types.joinToString(",") // Convertir lista a string separada por comas
                 } else {
                     tvResult.text = "Pokémon no encontrado!"
                     ivPokemonSprite.setImageResource(0)
@@ -112,48 +112,8 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun fetchTypeWeakness(types: List<TypeSlot>?, tvResult: TextView) {
-        val allWeaknesses = mutableListOf<String>()
-        val allStrengths = mutableListOf<String>()
-
-        // Iterar sobre cada tipo y obtener debilidades y fortalezas
-        types?.forEach { typeSlot ->
-            api.getType(typeSlot.type.name).enqueue(object : Callback<TypeResponse> {
-                override fun onResponse(
-                    call: Call<TypeResponse>,
-                    response: Response<TypeResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val typeResponse = response.body()
-
-                        // Concatenar debilidades y fortalezas de este tipo
-                        val weaknesses =
-                            typeResponse?.damage_relations?.double_damage_from?.joinToString { it.name }
-                                ?: "No hay debilidades"
-                        val strengths =
-                            typeResponse?.damage_relations?.double_damage_to?.joinToString { it.name }
-                                ?: "No hay fortalezas"
-
-                        allWeaknesses.add(weaknesses)
-                        allStrengths.add(strengths)
-
-                        // Actualizar el resultado una vez que todos los tipos hayan sido procesados
-                        if (allWeaknesses.size == types.size) {
-                            tvResult.text = buildString {
-                                append("Tipo(s): ${types.joinToString { it.type.name }}\n")
-                                append("Débil contra: ${allWeaknesses.joinToString(", ")}\n")
-                                append("Eficaz contra: ${allStrengths.joinToString(", ")}")
-                            }
-                        }
-                    } else {
-                        tvResult.text = "Tipo no encontrado!"
-                    }
-                }
-
-                override fun onFailure(call: Call<TypeResponse>, t: Throwable) {
-                    tvResult.text = "Error: ${t.message}"
-                }
-            })
-        }
+    private fun fetchPokemonTypes(types: List<TypeSlot>?, tvResult: TextView) {
+        val pokemonTypes = types?.joinToString { it.type.name } ?: "Sin tipos"
+        tvResult.text = "Tipo(s): $pokemonTypes"
     }
 }
