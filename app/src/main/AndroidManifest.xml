@@ -36,10 +36,8 @@
         <!-- Actividades de los botones-->
         <activity android:name=".EficazActivity" />
         <activity android:name=".DebilActivity" />
-        <activity android:name=".AddFavoritesActivity" />
-        <activity android:name=".ShowFavoritesActivity" />
         <activity android:name=".CombateActivity" />
-
+        <activity android:name=".FavoriteActivity" /> <!-- Aquí está la actividad faltante -->
 
     </application>
 

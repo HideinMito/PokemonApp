@@ -36,9 +36,13 @@ class DebilActivity : AppCompatActivity() {
 
         if (pokemonTypes.isNotEmpty()) {
             fetchTypeWeakness(pokemonTypes) { weaknesses ->
-                val weaknessList = weaknesses.map { PokemonType(it) }
-                val adapter = PokemonTypeAdapter(weaknessList)
-                recyclerView.adapter = adapter
+                if (weaknesses.isNotEmpty()) {
+                    val weaknessList = weaknesses.map { PokemonType(it) }
+                    val adapter = PokemonTypeAdapter(weaknessList)
+                    binding.recyclerViewDebil.adapter = adapter
+                } else {
+                    showToast("No se encontraron debilidades para los tipos proporcionados.")
+                }
             }
         } else {
             showToast("Tipos de Pokémon no encontrados.")
@@ -52,11 +56,9 @@ class DebilActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Función para obtener las debilidades de los tipos usando la API.
-     */
     private fun fetchTypeWeakness(types: List<String>, callback: (List<String>) -> Unit) {
         val allWeaknesses = mutableListOf<String>()
+        var completedRequests = 0
 
         types.forEach { type ->
             api.getType(type).enqueue(object : retrofit2.Callback<TypeResponse> {
@@ -64,21 +66,26 @@ class DebilActivity : AppCompatActivity() {
                     call: retrofit2.Call<TypeResponse>,
                     response: retrofit2.Response<TypeResponse>
                 ) {
+                    completedRequests++
                     if (response.isSuccessful) {
                         val typeResponse = response.body()
                         val weaknesses = typeResponse?.damage_relations?.double_damage_from
                             ?.map { it.name } ?: listOf()
                         allWeaknesses.addAll(weaknesses)
+                    }
 
-                        // Llamar al callback cuando todos los tipos hayan sido procesados
-                        if (allWeaknesses.size >= types.size) {
-                            callback(allWeaknesses.distinct()) // Eliminar duplicados
-                        }
+                    if (completedRequests == types.size) {
+                        callback(allWeaknesses.distinct())
                     }
                 }
 
                 override fun onFailure(call: retrofit2.Call<TypeResponse>, t: Throwable) {
-                    callback(listOf("Error: ${t.message}"))
+                    completedRequests++
+                    showToast("Error al obtener datos para el tipo: $type")
+
+                    if (completedRequests == types.size) {
+                        callback(allWeaknesses.distinct())
+                    }
                 }
             })
         }

@@ -58,18 +58,54 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnDebil.setOnClickListener {
-            val intent = Intent(this, DebilActivity::class.java)
-            intent.putExtra("pokemonTypes", pokemonType) // Pasar todos los tipos del Pokémon
-            startActivity(intent)
+            if (pokemonType.isNotEmpty()) {
+                val intent = Intent(this, DebilActivity::class.java)
+                intent.putExtra("pokemonTypes", pokemonType) // Pasar los tipos como string separado por comas
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Primero busca un Pokémon para obtener sus tipos.", Toast.LENGTH_SHORT).show()
+            }
         }
+
 
 
         btnAddFavorites.setOnClickListener {
-            startActivity(Intent(this, AddFavoritesActivity::class.java))
+            val pokemonName = etPokemonName.text.toString().lowercase().trim()
+            if (pokemonName.isNotEmpty() && pokemonType.isNotEmpty()) {
+                api.getPokemon(pokemonName).enqueue(object : Callback<PokemonResponse> {
+                    override fun onResponse(call: Call<PokemonResponse>, response: Response<PokemonResponse>) {
+                        if (response.isSuccessful) {
+                            val pokemon = response.body()
+                            if (pokemon != null) {
+                                val database = PokemonDatabase.getDatabase(this@MainActivity)
+                                val pokemonDao = database.pokemonDao()
+                                Thread {
+                                    val pokemonEntity = PokemonEntity(
+                                        id = pokemon.id,
+                                        name = pokemon.name,
+                                        spriteUrl = pokemon.sprites.front_default
+                                    )
+                                    pokemonDao.insertPokemon(pokemonEntity)
+                                    runOnUiThread {
+                                        Toast.makeText(this@MainActivity, "Añadido a favoritos", Toast.LENGTH_SHORT).show()
+                                    }
+                                }.start()
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
+                        Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            } else {
+                Toast.makeText(this, "Primero busca un Pokémon válido.", Toast.LENGTH_SHORT).show()
+            }
         }
 
+
         btnShowFavorites.setOnClickListener {
-            startActivity(Intent(this, ShowFavoritesActivity::class.java))
+            startActivity(Intent(this, FavoriteActivity::class.java))
         }
 
         btnCombate.setOnClickListener {
@@ -87,17 +123,14 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val pokemon = response.body()
                     val types = pokemon?.types?.map { it.type.name } ?: listOf()
-                    val spriteUrl = pokemon?.sprites?.front_default
+                    pokemonType = types.joinToString(",") // Concatenar los tipos en un string separado por comas
 
+                    tvResult.text = "Tipo(s): ${types.joinToString(", ")}"
+
+                    val spriteUrl = pokemon?.sprites?.front_default
                     Glide.with(this@MainActivity)
                         .load(spriteUrl)
                         .into(ivPokemonSprite)
-
-                    tvResult.text = "Tipo(s): ${types.joinToString(", ")}"
-                    fetchPokemonTypes(pokemon?.types, tvResult)
-
-                    // Guardar los tipos del Pokémon
-                    pokemonType = types.joinToString(",") // Convertir lista a string separada por comas
                 } else {
                     tvResult.text = "Pokémon no encontrado!"
                     ivPokemonSprite.setImageResource(0)
