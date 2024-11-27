@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "102800304912",
+    "project_id": "pokemoncombate-mito",
+    "storage_bucket": "pokemoncombate-mito.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102800304912:android:eca04d8e6fbda97e9f5395",
+        "android_client_info": {
+          "package_name": "com.example.pokemontypesapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrIyXdPWj_ieyw_pkQKxeuAZoc2D5yS9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

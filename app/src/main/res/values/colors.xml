@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Color primario -->
+    <color name="colorPrimary">#FF5733</color>
+    <!-- Color de fondo -->
+    <color name="colorBackground">#FFFFFF</color>
+    <!-- Color del texto -->
+    <color name="colorText">#373434</color>
+    <!-- Color de botón -->
+    <color name="colorButton">#C962DB</color>
+    <!-- Color de borde -->
+    <color name="colorBorder">#9E9E9E</color>
+
+
 </resources>

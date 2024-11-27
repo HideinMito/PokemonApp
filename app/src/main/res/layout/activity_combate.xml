@@ -1,6 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo_combate">
+
+    <!-- Campo de texto para Pokémon 1 -->
+    <EditText
+        android:id="@+id/etPokemon1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Introduce Pokémon 1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/holo_green_light"/>
+
+    <!-- Botón para confirmar Pokémon 1 -->
+    <Button
+        android:id="@+id/btnConfirmPokemon1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmar Pokémon 1"
+        app:layout_constraintTop_toBottomOf="@id/etPokemon1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+    <!-- Imagen de Pokémon 1 -->
+    <ImageView
+        android:id="@+id/ivPokemonSprite1"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btnConfirmPokemon1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerInside" />
+
+    <!-- Campo de texto para Pokémon 2 -->
+    <EditText
+        android:id="@+id/etPokemon2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Introduce Pokémon 2"
+        app:layout_constraintTop_toBottomOf="@id/ivPokemonSprite1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/holo_green_light"/>
+
+    <!-- Botón para confirmar Pokémon 2 -->
+    <Button
+        android:id="@+id/btnConfirmPokemon2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmar Pokémon 2"
+        app:layout_constraintTop_toBottomOf="@id/etPokemon2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+    <!-- Imagen de Pokémon 2 -->
+    <ImageView
+        android:id="@+id/ivPokemonSprite2"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btnConfirmPokemon2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerInside" />
+
+    <!-- Botón para iniciar el combate -->
+    <Button
+        android:id="@+id/btnIniciarCombate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Combate"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/ivPokemonSprite2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+    <!-- Resultado del combate -->
+    <TextView
+        android:id="@+id/tvResultadoCombate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ganador:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/btnIniciarCombate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="14dp"
+        android:fontFamily="sans-serif-black"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

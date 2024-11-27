@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
+    id("com.google.gms.google-services") version "4.3.15" apply false
 }
 
 android {
@@ -45,6 +46,10 @@ android {
 }
 
 dependencies {
+    // Dependencias de Firebase
+    implementation ("com.google.firebase:firebase-messaging:23.1.1")
+    implementation ("com.google.firebase:firebase-analytics:21.0.0")
+
     // Dependencia para Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -55,7 +60,7 @@ dependencies {
     // Dependencia para RecyclerView (para la lista de tipos)
     implementation(libs.androidx.recyclerview)
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
 
     // Dependencia para ConstraintLayout

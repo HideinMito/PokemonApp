@@ -4,14 +4,16 @@
 
     <!-- Permiso para usar internet (por si se necesita más adelante) -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/icono_app"
         android:supportsRtl="true"
         android:theme="@style/Theme.PokemonTypesApp"
         tools:targetApi="31">
@@ -37,7 +39,25 @@
         <activity android:name=".EficazActivity" />
         <activity android:name=".DebilActivity" />
         <activity android:name=".CombateActivity" />
-        <activity android:name=".FavoriteActivity" /> <!-- Aquí está la actividad faltante -->
+        <activity android:name=".FavoriteActivity" />
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="tu.paquete" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

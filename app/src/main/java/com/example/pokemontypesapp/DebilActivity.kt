@@ -1,6 +1,5 @@
 package com.example.pokemontypesapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -46,13 +45,6 @@ class DebilActivity : AppCompatActivity() {
             }
         } else {
             showToast("Tipos de Pokémon no encontrados.")
-        }
-
-        // Configurar el botón para regresar a la actividad principal
-        binding.btnBackToMain.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
         }
     }
 

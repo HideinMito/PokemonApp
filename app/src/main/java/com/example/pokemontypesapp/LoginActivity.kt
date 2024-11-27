@@ -1,18 +1,16 @@
 package com.example.pokemontypesapp
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.app.DatePickerDialog
-import java.util.Calendar
+import java.util.*
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var etUsername: EditText
-    private lateinit var etPassword: EditText
     private lateinit var etBirthDate: EditText
     private lateinit var btnLogin: Button
 
@@ -21,8 +19,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // Vinculando las vistas
-        etUsername = findViewById(R.id.etUsername)
-        etPassword = findViewById(R.id.etPassword)
         etBirthDate = findViewById(R.id.etBirthDate)
         btnLogin = findViewById(R.id.btnLogin)
 
@@ -33,18 +29,22 @@ class LoginActivity : AppCompatActivity() {
 
         // Configurar el botón de inicio de sesión
         btnLogin.setOnClickListener {
-            val username = etUsername.text.toString()
-            val password = etPassword.text.toString()
             val birthDate = etBirthDate.text.toString()
 
-            // Validar los campos
-            if (username.isEmpty() || password.isEmpty() || birthDate.isEmpty()) {
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+            // Validar que la fecha de nacimiento no esté vacía
+            if (birthDate.isEmpty()) {
+                Toast.makeText(this, "Por favor, completa el campo de fecha de nacimiento", Toast.LENGTH_SHORT).show()
             } else {
-                // Si la validación es exitosa, continuar a la MainActivity
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish() // Opcional: cerrar la actividad de Login después de iniciar sesión
+                // Validar que la persona tiene al menos 18 años
+                if (isAdult(birthDate)) {
+                    // Si la persona tiene 18 años o más, continuar a la MainActivity
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish() // Opcional: cerrar la actividad de Login después de iniciar sesión
+                } else {
+                    // Si la persona no tiene 18 años, mostrar un mensaje de error
+                    Toast.makeText(this, "Debes ser mayor de 18 años para acceder a la aplicación", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -68,5 +68,25 @@ class LoginActivity : AppCompatActivity() {
 
         // Mostrar el DatePickerDialog
         picker.show()
+    }
+
+    private fun isAdult(birthDate: String): Boolean {
+        val c = Calendar.getInstance()
+        val today = c.timeInMillis
+
+        // Convertir la fecha de nacimiento en un objeto Calendar
+        val birthCalendar = Calendar.getInstance()
+        val parts = birthDate.split("/")
+        val birthDay = parts[0].toInt()
+        val birthMonth = parts[1].toInt() - 1
+        val birthYear = parts[2].toInt()
+
+        birthCalendar.set(birthYear, birthMonth, birthDay)
+
+        // Calcular la diferencia de años entre la fecha actual y la fecha de nacimiento
+        val age = (today - birthCalendar.timeInMillis) / (365.25 * 24 * 60 * 60 * 1000)
+
+        // Verificar si la edad es mayor o igual a 18 años
+        return age >= 18
     }
 }

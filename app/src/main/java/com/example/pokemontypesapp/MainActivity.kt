@@ -1,6 +1,9 @@
 package com.example.pokemontypesapp
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -12,11 +15,14 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    private val CHANNEL_ID = "pokemon_battle_channel"
+    private lateinit var notificationReceiver: BroadcastReceiver
+
     private lateinit var api: PokeApi
     private lateinit var ivPokemonSprite: ImageView
     private lateinit var progressBar: ProgressBar
-    private lateinit var tvWelcome: TextView // Nuevo para mostrar el saludo
-    private var pokemonType: String = "" // Variable para almacenar el tipo del Pokémon
+    private lateinit var tvWelcome: TextView
+    private var pokemonType: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val tvResult = findViewById<TextView>(R.id.tvResult)
         ivPokemonSprite = findViewById(R.id.ivPokemonSprite)
         progressBar = findViewById(R.id.progressBar)
-        tvWelcome = findViewById(R.id.tvWelcome) // Asigna la referencia
+        tvWelcome = findViewById(R.id.tvWelcome)
 
         // Botones
         val btnEficaz = findViewById<Button>(R.id.btnEficaz)
@@ -50,24 +56,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Listeners para cambiar a las actividades
         btnEficaz.setOnClickListener {
             val intent = Intent(this, EficazActivity::class.java)
-            intent.putExtra("pokemonTypes", pokemonType) // Pasar todos los tipos del Pokémon
+            intent.putExtra("pokemonTypes", pokemonType)
             startActivity(intent)
         }
 
         btnDebil.setOnClickListener {
             if (pokemonType.isNotEmpty()) {
                 val intent = Intent(this, DebilActivity::class.java)
-                intent.putExtra("pokemonTypes", pokemonType) // Pasar los tipos como string separado por comas
+                intent.putExtra("pokemonTypes", pokemonType)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Primero busca un Pokémon para obtener sus tipos.", Toast.LENGTH_SHORT).show()
             }
         }
-
-
 
         btnAddFavorites.setOnClickListener {
             val pokemonName = etPokemonName.text.toString().lowercase().trim()
@@ -103,7 +106,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         btnShowFavorites.setOnClickListener {
             startActivity(Intent(this, FavoriteActivity::class.java))
         }
@@ -111,6 +113,9 @@ class MainActivity : AppCompatActivity() {
         btnCombate.setOnClickListener {
             startActivity(Intent(this, CombateActivity::class.java))
         }
+
+        //Registrar el receptor para recibir notificaciones
+        setupNotificationReceiver()
     }
 
     private fun searchPokemon(pokemonName: String, tvResult: TextView) {
@@ -123,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val pokemon = response.body()
                     val types = pokemon?.types?.map { it.type.name } ?: listOf()
-                    pokemonType = types.joinToString(",") // Concatenar los tipos en un string separado por comas
+                    pokemonType = types.joinToString(",")
 
                     tvResult.text = "Tipo(s): ${types.joinToString(", ")}"
 
@@ -145,8 +150,25 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun fetchPokemonTypes(types: List<TypeSlot>?, tvResult: TextView) {
-        val pokemonTypes = types?.joinToString { it.type.name } ?: "Sin tipos"
-        tvResult.text = "Tipo(s): $pokemonTypes"
+    private fun setupNotificationReceiver() {
+        notificationReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val title = intent?.getStringExtra("title") ?: "Notificación"
+                val body = intent?.getStringExtra("body") ?: "Sin contenido"
+
+                // Muestra un Toast con la notificación
+                Toast.makeText(this@MainActivity, "$title: $body", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // Registrar el receptor con las banderas necesarias para Android 12+
+        val intentFilter = IntentFilter("com.example.pokemontypesapp")
+        registerReceiver(notificationReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(notificationReceiver) // Desregistra el receptor al cerrar la actividad
     }
 }
